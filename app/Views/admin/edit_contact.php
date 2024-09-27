@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="<?= base_url('assets/css/style.css') ?>">
+
 <h2>Edit Company Contact Info</h2>
 <form action="/admin/updateContact" method="POST">
     <label for="email">Email:</label>

@@ -1,3 +1,5 @@
+<link rel="stylesheet" type="text/css" href="<?= base_url('assets/css/style.css') ?>">
+
 <h2>Edit Company Info</h2>
 <form action="/admin/updateCompany" method="POST">
     <label for="name">Company Name:</label>

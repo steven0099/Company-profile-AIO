@@ -245,3 +245,51 @@ FROM `company`
 10 SYSTEMPATH\Boot.php(67): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 11 FCPATH\index.php(56): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 12 SYSTEMPATH\rewrite.php(44): require_once('E:\\Magang\\company_profile\\public\\index.php')
+ERROR - 2024-09-25 16:35:53 --> mysqli_sql_exception: Table 'admin' already exists in E:\Magang\company_profile\system\Database\MySQLi\Connection.php:312
+Stack trace:
+#0 E:\Magang\company_profile\system\Database\MySQLi\Connection.php(312): mysqli->query('CREATE TABLE `a...', 0)
+#1 E:\Magang\company_profile\system\Database\BaseConnection.php(734): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `a...')
+#2 E:\Magang\company_profile\system\Database\BaseConnection.php(648): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `a...')
+#3 E:\Magang\company_profile\system\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `a...')
+#4 E:\Magang\company_profile\app\Database\Migrations\2024-09-25-163538_CreateAdminTable.php(30): CodeIgniter\Database\Forge->createTable('admin')
+#5 E:\Magang\company_profile\system\Database\MigrationRunner.php(867): App\Database\Migrations\CreateAdminTable->up()
+#6 E:\Magang\company_profile\system\Database\MigrationRunner.php(183): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+#7 E:\Magang\company_profile\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#8 E:\Magang\company_profile\system\CLI\Commands.php(70): CodeIgniter\Commands\Database\Migrate->run(Array)
+#9 E:\Magang\company_profile\system\CLI\Console.php(48): CodeIgniter\CLI\Commands->run('migrate', Array)
+#10 E:\Magang\company_profile\system\Boot.php(351): CodeIgniter\CLI\Console->run()
+#11 E:\Magang\company_profile\system\Boot.php(104): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 E:\Magang\company_profile\spark(84): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}
+ERROR - 2024-09-25 16:36:04 --> mysqli_sql_exception: Table 'admin' already exists in E:\Magang\company_profile\system\Database\MySQLi\Connection.php:312
+Stack trace:
+#0 E:\Magang\company_profile\system\Database\MySQLi\Connection.php(312): mysqli->query('CREATE TABLE `a...', 0)
+#1 E:\Magang\company_profile\system\Database\BaseConnection.php(734): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `a...')
+#2 E:\Magang\company_profile\system\Database\BaseConnection.php(648): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `a...')
+#3 E:\Magang\company_profile\system\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `a...')
+#4 E:\Magang\company_profile\app\Database\Migrations\2024-09-25-163538_CreateAdminTable.php(30): CodeIgniter\Database\Forge->createTable('admin')
+#5 E:\Magang\company_profile\system\Database\MigrationRunner.php(867): App\Database\Migrations\CreateAdminTable->up()
+#6 E:\Magang\company_profile\system\Database\MigrationRunner.php(183): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+#7 E:\Magang\company_profile\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#8 E:\Magang\company_profile\system\CLI\Commands.php(70): CodeIgniter\Commands\Database\Migrate->run(Array)
+#9 E:\Magang\company_profile\system\CLI\Console.php(48): CodeIgniter\CLI\Commands->run('migrate', Array)
+#10 E:\Magang\company_profile\system\Boot.php(351): CodeIgniter\CLI\Console->run()
+#11 E:\Magang\company_profile\system\Boot.php(104): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 E:\Magang\company_profile\spark(84): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}
+ERROR - 2024-09-25 16:36:17 --> mysqli_sql_exception: Table 'admin' already exists in E:\Magang\company_profile\system\Database\MySQLi\Connection.php:312
+Stack trace:
+#0 E:\Magang\company_profile\system\Database\MySQLi\Connection.php(312): mysqli->query('CREATE TABLE `a...', 0)
+#1 E:\Magang\company_profile\system\Database\BaseConnection.php(734): CodeIgniter\Database\MySQLi\Connection->execute('CREATE TABLE `a...')
+#2 E:\Magang\company_profile\system\Database\BaseConnection.php(648): CodeIgniter\Database\BaseConnection->simpleQuery('CREATE TABLE `a...')
+#3 E:\Magang\company_profile\system\Database\Forge.php(570): CodeIgniter\Database\BaseConnection->query('CREATE TABLE `a...')
+#4 E:\Magang\company_profile\app\Database\Migrations\2024-09-25-163538_CreateAdminTable.php(30): CodeIgniter\Database\Forge->createTable('admin')
+#5 E:\Magang\company_profile\system\Database\MigrationRunner.php(867): App\Database\Migrations\CreateAdminTable->up()
+#6 E:\Magang\company_profile\system\Database\MigrationRunner.php(183): CodeIgniter\Database\MigrationRunner->migrate('up', Object(stdClass))
+#7 E:\Magang\company_profile\system\Commands\Database\Migrate.php(85): CodeIgniter\Database\MigrationRunner->latest(NULL)
+#8 E:\Magang\company_profile\system\CLI\Commands.php(70): CodeIgniter\Commands\Database\Migrate->run(Array)
+#9 E:\Magang\company_profile\system\CLI\Console.php(48): CodeIgniter\CLI\Commands->run('migrate', Array)
+#10 E:\Magang\company_profile\system\Boot.php(351): CodeIgniter\CLI\Console->run()
+#11 E:\Magang\company_profile\system\Boot.php(104): CodeIgniter\Boot::runCommand(Object(CodeIgniter\CLI\Console))
+#12 E:\Magang\company_profile\spark(84): CodeIgniter\Boot::bootSpark(Object(Config\Paths))
+#13 {main}

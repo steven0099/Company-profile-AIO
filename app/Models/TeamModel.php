@@ -7,6 +7,6 @@ class TeamModel extends Model
 {
     protected $table = 'team';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['name', 'position', 'bio', 'image'];
+    protected $allowedFields = ['name', 'role', 'email', 'company_id', 'image'];
 }
 ?>
