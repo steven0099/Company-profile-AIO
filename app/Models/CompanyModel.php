@@ -7,6 +7,6 @@ class CompanyModel extends Model
 {
     protected $table = 'company';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['name', 'description'];
+    protected $allowedFields = ['name', 'description','logo'];
 }
 ?>

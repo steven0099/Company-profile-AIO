@@ -29,15 +29,43 @@ class Admin extends BaseController
     public function updateCompany()
     {
         $this->checkLogin(); // Ensure login is checked
-
+        
         $companyModel = new CompanyModel();
         
-        // Update the company record with the POST data
-        $companyModel->update(1, $this->request->getPost());
+        // Get the POST data
+        $data = $this->request->getPost();
+        
+        // Handle logo upload
+        $file = $this->request->getFile('logo');
+        
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newFileName = $file->getRandomName();
+            
+            // Ensure the directory exists
+            if (!is_dir(FCPATH . 'uploads/company_logo')) {
+                mkdir(FCPATH . 'uploads/company_logo', 0777, true);
+            }
     
-        // Redirect back to the admin dashboard after updating the company
+            // Attempt to move the uploaded file
+            if ($file->move(FCPATH . 'uploads/company_logo', $newFileName)) {
+                $data['logo'] = $newFileName;  // Save new logo filename to the data array
+            } else {
+                // Display or log file upload error for debugging
+                echo "Error moving file: " . $file->getErrorString();
+                return;
+            }
+        } else {
+            // Display file upload error if file is invalid
+            echo "File is not valid: " . $file->getErrorString();
+            return;
+        }
+    
+        // Update the company record
+        $companyModel->update(1, $data);
+    
+        // Redirect to the admin dashboard after updating
         return redirect()->to('/admin');
-    }
+    }    
     
     public function listTeam()
     {

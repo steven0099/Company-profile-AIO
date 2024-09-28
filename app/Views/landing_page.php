@@ -2,7 +2,8 @@
 <?= $this->include('partials/header') ?>
 
 <!-- Company Section -->
-<section id="company">
+<section id="company" style="text-align: center;">
+    <img src="<?= base_url('uploads/company_logo/' . esc($company['logo'])) ?>" alt="<?= esc($company['name']) ?> Logo" style="width: 150px; height: auto; display: block; margin: 0 auto;">
     <h1><?= esc($company['name']) ?></h1>
     <h4><?= esc($company['description']) ?></h4>
 </section>
