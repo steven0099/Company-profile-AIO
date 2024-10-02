@@ -1,0 +1,115 @@
+<!-- sidebar.php -->
+<div class="sidebar" style="width: 250px; height: 100vh; position: fixed; top: 0; left: 0; background-color: #333; color: white; padding: 20px; overflow-y: auto;">
+    <!-- Display the company logo -->
+    <?php if (isset($company) && $company['logo']) : ?>
+        <img src="<?= base_url('uploads/company_logo/' . esc($company['logo'])) ?>" 
+             alt="<?= esc($company['name']) ?> Logo" 
+             style="width: 150px; height: auto; display: block; margin: 20px auto;">
+    <?php else: ?>
+        <p>No company logo found.</p>
+    <?php endif; ?>
+
+    <!-- Manage Data Dropdown -->
+    <div class="dropdown">
+        <button class="dropdown-btn" style="
+            width: 100%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            background-color: #444;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+        ">
+            Manage Data
+            <span class="arrow" style="margin-left: auto;">&#9660;</span>
+        </button>
+        <div class="dropdown-content" style="
+            display: none; 
+            background-color: #444; 
+            margin-top: 5px;
+        ">
+            <a href="/admin/editCompany" style="
+                display: block; 
+                padding: 10px; 
+                color: white; 
+                text-decoration: none;
+            ">Edit Company Info</a>
+            <a href="/admin/listTeam" style="
+                display: block; 
+                padding: 10px; 
+                color: white; 
+                text-decoration: none;
+            ">Manage Team</a>
+            <a href="/admin/listHeroSlides" style="
+                display: block; 
+                padding: 10px; 
+                color: white; 
+                text-decoration: none;
+            ">Manage Hero Slides</a>
+        </div>
+    </div>
+
+    <!-- Go To Dropdown -->
+    <div class="dropdown" style="margin-top: 20px;">
+        <button class="dropdown-btn" style="
+            width: 100%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            background-color: #444;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+        ">
+            Go To
+            <span class="arrow" style="margin-left: auto;">&#9660;</span>
+        </button>
+        <div class="dropdown-content" style="
+            display: none; 
+            background-color: #444; 
+            margin-top: 5px;
+        ">
+            <a href="/admin" style="
+                display: block; 
+                padding: 10px; 
+                color: white; 
+                text-decoration: none;
+            ">Admin Dashboard</a>
+            <a href="/" style="
+                display: block; 
+                padding: 10px; 
+                color: white; 
+                text-decoration: none;
+            ">Go to Landing Page</a>
+            <a href="/auth/logout" style="
+                display: block; 
+                padding: 10px; 
+                color: white; 
+                text-decoration: none;
+            ">Logout</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropdownBtns = document.querySelectorAll('.dropdown-btn');
+        
+        dropdownBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                this.classList.toggle('active');
+                const dropdownContent = this.nextElementSibling;
+                if (dropdownContent.style.display === "block") {
+                    dropdownContent.style.display = "none";
+                } else {
+                    dropdownContent.style.display = "block";
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,371 @@
+<?php
+namespace App\Controllers;
+
+use App\Models\CompanyModel;
+use App\Models\TeamModel;
+use App\Models\ContactModel;
+use App\Models\HeroModel;
+use App\Models\AdminModel;
+
+class Admin extends BaseController
+{
+    // Dashboard view
+    public function index()
+    {
+        if (!session()->get('loggedIn')) {
+            // Redirect to login page if no admin session exists
+            return redirect()->to('/auth/login')->with('error', 'Please log in first.');
+        }
+    
+        // Get the admin name from the session
+        $data['title'] = 'All In One Store - Admin';
+        $data['adminName'] = session()->get('adminName');
+        $data['company'] = $this->companyData;
+    
+        // Pass the admin name to the view
+        return view('admin/dashboard', $data);
+    }
+
+    public function editCompany()
+    {
+        $this->checkLogin(); // Ensure login is checked
+
+        $companyModel = new CompanyModel();
+        $data['company'] = $companyModel->first();
+        $data['title'] = "All In One Store - Edit Company Data";
+        return view('admin/edit_company', $data);
+    }
+
+    public function updateCompany()
+    {
+        $this->checkLogin(); // Ensure login is checked
+        
+        $companyModel = new CompanyModel();
+        
+        // Get the POST data
+        $data = $this->request->getPost();
+        
+        // Handle logo upload
+        $file = $this->request->getFile('logo');
+        
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newFileName = $file->getRandomName();
+            
+            // Ensure the directory exists
+            if (!is_dir(FCPATH . 'uploads/company_logo')) {
+                mkdir(FCPATH . 'uploads/company_logo', 0777, true);
+            }
+    
+            // Attempt to move the uploaded file
+            if ($file->move(FCPATH . 'uploads/company_logo', $newFileName)) {
+                $data['logo'] = $newFileName;  // Save new logo filename to the data array
+            } else {
+                // Display or log file upload error for debugging
+                echo "Error moving file: " . $file->getErrorString();
+                return;
+            }
+        } else {
+            // Display file upload error if file is invalid
+            echo "File is not valid: " . $file->getErrorString();
+            return;
+        }
+    
+        // Update the company record
+        $companyModel->update(1, $data);
+    
+        // Redirect to the admin dashboard after updating
+        return redirect()->to('/admin');
+    }    
+    
+    public function listTeam()
+    {
+        $this->checkLogin(); // Ensure login is checked
+
+        $teamModel = new TeamModel();
+        $data['title'] = 'All In One Store - Team Management';
+        $data['team'] = $teamModel->findAll();
+        $data['company'] = $this->companyData;
+        return view('admin/team', $data);
+    }
+
+    public function addTeam()
+    {
+        $this->checkLogin(); // Ensure login is checked
+        $data['company'] = $this->companyData;
+        $data['title'] = "All In One Store - Add Team Member";
+        return view('admin/add_team',$data);
+    }
+
+    public function editTeam($id)
+    {
+        $this->checkLogin(); // Ensure the user is logged in
+
+        $teamModel = new TeamModel();
+        $data['member'] = $teamModel->find($id);
+        $data['company'] = $this->companyData;
+        $data['title'] = "All In One Store - Edit Team Member";
+
+        if (!$data['member']) {
+            return redirect()->to('/admin/listTeam')->with('error', 'Team member not found.');
+        }
+
+        return view('admin/edit_team', $data);
+    }
+
+    // Method to save team member information
+    public function saveTeam()
+    {
+        $this->checkLogin(); // Ensure the user is logged in
+
+        $teamModel = new TeamModel();
+
+        // Prepare the data for insertion
+        $data = [
+            'name' => $this->request->getPost('name'),
+            'role' => $this->request->getPost('role'),
+            'email' => $this->request->getPost('email'),
+            'company_id' => 1 // Replace with the actual company_id if needed
+        ];
+
+        // Handle image upload
+        $file = $this->request->getFile('image');
+
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newFileName = $file->getRandomName();
+            
+            // Ensure the directory exists
+            if (!is_dir(FCPATH . 'uploads/team_pics')) {
+                mkdir(FCPATH . 'uploads/team_pics', 0777, true);
+            }
+
+            // Attempt to move the uploaded file
+            if ($file->move(FCPATH . 'uploads/team_pics', $newFileName)) {
+                // If the file is moved successfully, update the image field
+                $data['image'] = $newFileName;
+            } else {
+                // Log any error related to file movement
+                return $this->response->setStatusCode(500)->setBody($file->getErrorString());
+            }
+        }
+
+        // Save the team member in the database
+        if (!$teamModel->save($data)) {
+            return redirect()->back()->with('error', 'Failed to add team member.');
+        }
+
+        return redirect()->to('/admin/listTeam')->with('success', 'Team member added successfully.');
+    }
+
+    // Method to update team member information
+    public function updateTeam($id)
+    {
+        $this->checkLogin(); // Ensure the user is logged in
+
+        $teamModel = new TeamModel();
+
+        $data = [
+            'name' => $this->request->getPost('name'),
+            'role' => $this->request->getPost('role'),
+            'email' => $this->request->getPost('email')
+        ];
+
+        // Handle image upload
+        $file = $this->request->getFile('image');
+        
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newFileName = $file->getRandomName();
+            
+            // Ensure the directory exists
+            if (!is_dir(FCPATH . 'uploads/team_pics')) {
+                mkdir(FCPATH . 'uploads/team_pics', 0777, true);
+            }
+
+            // Attempt to move the uploaded file
+            if ($file->move(FCPATH . 'uploads/team_pics', $newFileName)) {
+                // If the file is moved successfully, update the image field
+                $data['image'] = $newFileName;
+            } else {
+                // Log any error related to file movement
+                return $this->response->setStatusCode(500)->setBody($file->getErrorString());
+            }
+        }
+
+        // Update the team member in the database
+        if (!$teamModel->update($id, $data)) {
+            return redirect()->back()->with('error', 'Failed to update team member.');
+        }
+
+        return redirect()->to('/admin/listTeam')->with('success', 'Team member updated successfully.');
+    }
+
+    public function deleteTeam($id)
+    {
+        $this->checkLogin(); // Ensure login is checked
+
+        $teamModel = new TeamModel();
+        $teamModel->delete($id);
+        return redirect()->to('/admin/listTeam');
+    }
+
+    public function editContact()
+    {
+        $this->checkLogin(); // Ensure login is checked
+
+        $contactModel = new ContactModel();
+        $data['contact'] = $contactModel->first();
+        $data['company'] = $this->companyData;
+        return view('admin/edit_contact', $data);
+    }
+
+    public function updateContact()
+    {
+        $this->checkLogin(); // Ensure login is checked
+
+        $contactModel = new ContactModel();
+        $contactModel->update(1, $this->request->getPost());
+        return redirect()->to('/admin/editContact');
+    }
+
+    // Helper function to check if the user is logged in
+    private function checkLogin()
+    {
+        if (!session()->get('loggedIn')) {
+            // Redirect to login page if not logged in
+            return redirect()->to('/auth/login')->send();
+        }
+    }
+
+    public function listHeroSlides()
+    {
+        $this->checkLogin(); // Ensure login is checked
+
+        $heroModel = new HeroModel();
+        $data['heroSlides'] = $heroModel->findAll();
+        $data['title'] = 'All In One Store - Hero Management';
+        $data['company'] = $this->companyData;
+        return view('admin/list_hero_slide', $data);
+    }
+
+    public function addHeroSlide()
+    {
+        $this->checkLogin(); // Ensure login is checked
+        $data['company'] = $this->companyData;
+        $data['title'] = 'All In One Store - Add Hero Slide';
+        return view('admin/add_hero_slide',$data);
+    }
+
+    // Method to save hero slide
+    public function saveHeroSlide()
+    {
+        $this->checkLogin(); // Ensure login is checked
+
+        $heroModel = new HeroModel();
+
+        // Prepare data for the hero slide
+        $data = [
+            'title' => $this->request->getPost('title'),
+            'description' => $this->request->getPost('description'),
+            'slide_order' => $this->request->getPost('slide_order')
+        ];
+
+        // Handle image upload
+        $image = $this->request->getFile('image');
+        
+        if ($image && $image->isValid() && !$image->hasMoved()) {
+            $newFileName = $image->getRandomName();
+            
+            // Ensure the directory exists
+            if (!is_dir(FCPATH . 'uploads/hero_images')) {
+                mkdir(FCPATH . 'uploads/hero_images', 0777, true);
+            }
+
+            // Attempt to move the uploaded file
+            if ($image->move(FCPATH . 'uploads/hero_images', $newFileName)) {
+                // If the file is moved successfully, update the image field
+                $data['image'] = $newFileName;
+            } else {
+                // Log any error related to file movement
+                return $this->response->setStatusCode(500)->setBody($image->getErrorString());
+            }
+        }
+
+        // Save the hero slide in the database
+        $heroModel->save($data);
+
+        return redirect()->to('/admin/listHeroSlides')->with('success', 'Hero slide added successfully.');
+    }
+
+    public function deleteHeroSlide($id)
+    {
+        $this->checkLogin(); // Ensure login is checked
+
+        $heroModel = new HeroModel();
+        $heroModel->delete($id);
+
+        return redirect()->to('/admin/listHeroSlides');
+    }
+
+    // Method to update hero slide
+    public function updateHeroSlide($id)
+    {
+        $this->checkLogin(); // Ensure login is checked
+
+        $heroModel = new HeroModel();
+
+        // Prepare data for updating the hero slide
+        $data = [
+            'title' => $this->request->getPost('title'),
+            'description' => $this->request->getPost('description'),
+            'slide_order' => $this->request->getPost('slide_order')
+        ];
+
+        // Handle image upload
+        $image = $this->request->getFile('image');
+        
+        if ($image && $image->isValid() && !$image->hasMoved()) {
+            $newFileName = $image->getRandomName();
+            
+            // Ensure the directory exists
+            if (!is_dir(FCPATH . 'uploads/hero_images')) {
+                mkdir(FCPATH . 'uploads/hero_images', 0777, true);
+            }
+
+            // Attempt to move the uploaded file
+            if ($image->move(FCPATH . 'uploads/hero_images', $newFileName)) {
+                // If the file is moved successfully, update the image field
+                $data['image'] = $newFileName;
+            } else {
+                // Log any error related to file movement
+                return $this->response->setStatusCode(500)->setBody($image->getErrorString());
+            }
+        }
+
+        // Update the hero slide in the database
+        $heroModel->update($id, $data);
+
+        return redirect()->to('/admin/listHeroSlides')->with('success', 'Hero slide updated successfully.');
+    }
+
+    // app/Controllers/Admin.php
+public function editHeroSlide($id)
+{
+    $heroModel = new \App\Models\HeroModel();
+    
+    // Fetch the hero slide
+    $heroSlide = $heroModel->find($id);
+
+    if (!$heroSlide) {
+        return redirect()->to('/admin/listHeroSlides')->with('error', 'Slide not found');
+    }
+
+    $data = [
+        'title' => 'All In One Store - Edit Hero Slide',
+        'heroSlide' => $heroSlide,
+        'company' => $this-> companyData
+    ];
+
+    return view('admin/edit_hero_slide', $data);
+}
+
+}
+
